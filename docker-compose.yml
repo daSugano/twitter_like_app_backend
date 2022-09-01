@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  es:
+    build: ./elasticsearch
+    container_name: es
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    tty: true
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+
+  py:
+    build: ./python
+    container_name: py
+    tty: true
+    volumes:
+      - .:/app/helloworld
+    ports:
+      - 50010:50010
+    networks:
+      - esnet
+
+networks:
+  esnet:
